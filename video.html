@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>绝地求生</title>
+	<style type="text/css">
+		*{
+			margin:0
+		}
+		header{
+			position: fixed;
+			top:0;
+			left: 0;
+			background-color: #333;
+			height: 88px;
+			width: 100%;
+			display: flex;
+			z-index: 999;
+		}
+		header a{
+			color: #ccc;
+			text-decoration: none;
+		}
+		header .nav_box{
+			width: 700px;
+			margin: 30px 5%;
+			position: absolute;
+			left: 15%;
+		}
+		header .nav_box ul{
+			display: flex;
+			list-style: none;
+		}
+		header .nav_box ul li{
+			width: 25%;
+		}
+		.first_box{
+			margin-top: 88px;
+		}
+		body{
+			height: 100%;
+			overflow: hidden;
+		}
+		.container{
+			transform: translate(0,0);
+			transition: all 1s;
+		}
+		video{
+			display: block;
+			width: 100%;
+		}
+		.sprite{
+			background: url('sprite.png');
+		}
+		.first_box,.second_box,.three_box{
+			position: relative;
+		}
+		.first_bg{
+			position: absolute;
+		    width: 285px;
+		    height: 138px;
+		    bottom: 400px;
+		    left: 41%;
+		    background-position: -800px -432px;
+		}
+		.second_bg{
+			position: absolute;
+		    width: 536px;
+		    height: 222px;
+		    bottom: 200px;
+		    left: 25%;
+		    background-position: -804px -210px;
+		}
+		.three_bg{
+			position: absolute;
+			width: 544px;
+		    height: 205px;
+		    bottom: 200px;
+		    left: 25%;
+		    background-position: -248px -216px;
+		}
+		.logo_box{
+			width: 692px;
+			height: 350px;
+			margin-top: 8px;
+			background: url("logo_b.png") no-repeat;
+			background-size: 20%;
+			left: 8%;
+			position: absolute;
+		}
+		.button_box{
+			width: 150px;
+			height: 48px;
+			margin: 14px 50px;
+			position: absolute;
+			left: 80%;
+			background-position: -800px -563px; 
+		}
+		.nav{
+			background: url("bg_nav.png") ;
+			top: 88px;
+			left: 20px;
+			z-index: 2;
+			width: 38px;
+			height: 936px;
+			position: absolute;
+			background-size: 80%;
+			background-repeat: no-repeat;
+		}
+		.nav ul{
+			list-style: none;
+			color:#fff;
+		}
+		.nav li{
+			position: absolute;
+			cursor: pointer;
+		}
+		.nav li:hover{
+			color: #e69800;
+		}
+		.nav li:nth-child(1){
+			color: #e69800;
+			top:32px;
+		}
+		.nav li:nth-child(2){
+			top:180px;	
+		}
+		.nav li:nth-child(3){
+			top:329px;
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		<div class="logo_box"></div>
+		<div class="nav_box">
+			<ul>
+				<li><a href="">官网首页</a></li>
+				<li><a href="">绑定查询</a></li>
+				<li><a href="" style="color:#e69800;">国服预约</a></li>
+				<li><a href="" style="color:#e69800;">老兵绑定</a></li>	
+				<li><a href="">游戏特色</a></li>	
+				<li><a href="">社区APP</a></li>	
+				<li><a href="">网吧认证</a></li>	
+			</ul>
+
+		</div>
+		<div class="button_box sprite"></div>
+	</header>
+
+	<div class="nav">
+		<ul>
+			<li onclick="changeTo(0)">N</li>
+			<li onclick="changeTo(1)">NE</li>
+			<li onclick="changeTo(2)">E</li>
+		</ul>
+	</div>
+
+	<div class="container" id="container">
+		<div class="first_box">
+			<video id="v1" src="first.mp4" muted autoplay loop controls></video>
+			<p class="first_bg sprite"></p>
+		</div>
+		<div class="second_box">
+			<video id="v2" src="nvhanzimp4.mp4" controls loop preload></video>
+			<p class="second_bg sprite"></p>
+		</div>
+		<div class="three_box">
+			<video id="v3" src="nvhanzimp4.mp4" controls loop preload></video>
+			<p class="three_bg sprite"></p>
+		</div>
+	</div>
+</body>
+</html>
+
+<script type="text/javascript">
+	var index = 0;
+	var video_box = document.querySelectorAll(".container > div");
+	var nav_li_box = document.querySelectorAll(".nav li");
+	var length = video_box.length;
+	var y;
+	var flag = false;
+
+	function changeBox(step,num=0){
+		video_box[index].querySelector("video").pause();
+		nav_li_box[index].style="color: #fff";
+		if(step == ''){
+			index = num;
+		}else if(step=='up'){
+			index = --index <= 0 ? 0 : index;
+		}else{
+			index = ++index >= length - 1 ? length - 1 : index;
+		}
+		y=index*(-780);
+		document.getElementById("container").style="transform:translate(0,"+y+"px);";
+		video_box[index].querySelector("video").play();
+		nav_li_box[index].style="color: #e69800";
+		flag = false;
+	}
+
+	function upDown(e){
+		var step="";
+		e=e||window.event;
+		switch(e.keyCode){
+			case 38://上
+				step='up';
+				break;
+			case 40://下
+				step='down'					
+				break;
+		}
+		changeBox(step, 1);
+	}
+	
+	var curTime = 0;
+	var lastTime = 0;
+	function scrollFunc(e){
+		lastTime = curTime;
+		curTime = new Date().getTime();
+		e=e||window.event;//火狐用e，其它用window.event
+		//if(curTime - lastTime > 300){
+			if(e.wheelDelta == 120 || e.detail == 3){//上
+				step='up';					
+			}else if(e.wheelDelta == -120 || e.detail == 3){//下
+				step='down';
+			}
+		//}
+		if(!flag){
+			setTimeout(function(){
+				changeBox(step, 1);
+			}, 100);//只执行一次,匿名函数才能延迟
+			/*setInterval(function(){
+				changeBox(step);
+			}, 100);//不间断执行*/
+			flag = true;	
+		}
+		
+	}
+
+	function changeTo(num){
+		changeBox('', num)
+	}
+
+	//火狐
+	window.addEventListener('keydown', upDown, true);
+	if (document.addEventListener) { 
+		document.addEventListener('DOMMouseScroll', scrollFunc, false);
+	}
+
+	//360
+	window.onmousewheel = document.onmousewheel = scrollFunc;
+</script>
